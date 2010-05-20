@@ -1,11 +1,15 @@
 """
-Returns the HTML/js code necessary to display the OpenLike widget.
+Template tag for integrating OpenLike widget
+Basic usage: 
+    {% openlike %}
 """
 
 from django import template
 from django.conf import settings
 from django.contrib.sites.models import Site
 
+
+register = template.Library()
 
 def openlike(url='', title=''):
     """
@@ -21,8 +25,6 @@ def openlike(url='', title=''):
     if header:
         opts.append('header: \'%s\'' % header)
     if url:
-        if not url.startswith('http://'):
-            url = 'http://%s%s' % (Site.objects.get_current().domain, url)
         opts.append('url: \'%s\'' % url)
     if title:
         opts.append('title: \'%s\'' % title)
@@ -34,4 +36,4 @@ def openlike(url='', title=''):
     </script> 
     """ % dict(options=', '.join(opts))
 
-template.Library().simple_tag(openlike)
+register.simple_tag(openlike)
